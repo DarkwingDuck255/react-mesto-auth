@@ -42,7 +42,7 @@ export default function Main(props) {
             {cards.map((card, id) => (
                 <Card
                     card={card}
-                    key={id}
+                    key={_id}
                     link={card.link}
                     name={card.name}
                     likes={card.likes.length}

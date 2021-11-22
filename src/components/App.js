@@ -11,39 +11,39 @@ import ImagePopup from './ImagePopup.js';
 
 
 export function App() {
-    const [avatarEditPopupOpen, isEditAvatarPopupOpen] = React.useState(false)
-    const [editProfilePopupOpen, isEditProfilePopupOpen] = React.useState(false)
-    const [addPlacePopupOpen, isAddPlacePopupOpen] = React.useState(false)
-    const [deletePlacePopupOpen, isDeletePlacePopupOpen] = React.useState(false)
-    const [selectedCard, setselectedCard] = React.useState(null)
+    const [isAvatarEditPopupOpen, setEditAvatarPopupOpen] = React.useState(false)
+    const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false)
+    const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false)
+    const [isDeletePlacePopupOpen, setDeletePlacePopupOpen] = React.useState(false)
+    const [selectedCard, setSelectedCard] = React.useState(null)
 
 
     function handleEditAvatarPopupOpen() {
-        isEditAvatarPopupOpen(true)
+        setEditAvatarPopupOpen(true)
     }
 
     function handleCardClick(card) {
-        setselectedCard(card)
+        setSelectedCard(card)
     }
 
     function handleDeletePlace() {
-        isDeletePlacePopupOpen(true)
+        setDeletePlacePopupOpen(true)
     }
 
-    function handleEditProfilePopupOpen() {
-        isEditProfilePopupOpen(true)
+    function handleisEditProfilePopupOpen() {
+        setEditProfilePopupOpen(true)
     }
 
-    function handleAddPlacePopupOpen() {
-        isAddPlacePopupOpen(true)
+    function handleisAddPlacePopupOpen() {
+        setAddPlacePopupOpen(true)
     }
 
     function closeAllPopups() {
-        isEditAvatarPopupOpen(false)
-        isEditProfilePopupOpen(false)
-        isAddPlacePopupOpen(false)
-        isDeletePlacePopupOpen(false)
-        setselectedCard(null)
+        setEditAvatarPopupOpen(false)
+        setEditProfilePopupOpen(false)
+        setAddPlacePopupOpen(false)
+        setDeletePlacePopupOpen(false)
+        setSelectedCard(null)
     }
 
 
@@ -55,14 +55,14 @@ export function App() {
             <Header></Header>
             <Main
                 onEditAvatar={handleEditAvatarPopupOpen}
-                onEditProfile={handleEditProfilePopupOpen}
-                onAddPlace={handleAddPlacePopupOpen}
+                onEditProfile={handleisEditProfilePopupOpen}
+                onAddPlace={handleisAddPlacePopupOpen}
                 deletePlace={handleDeletePlace}
                 onCardClick={handleCardClick}
             />
             {/* попап автарки пользователя */}
             <PopupWithForm
-                isOpen={avatarEditPopupOpen}
+                isOpen={isAvatarEditPopupOpen}
                 onClose={closeAllPopups}
                 form={'update-avatar'}
                 title={'Обновить аватар'}
@@ -88,7 +88,7 @@ export function App() {
             
 
             <PopupWithForm
-                isOpen={editProfilePopupOpen}
+                isOpen={isEditProfilePopupOpen}
                 onClose={closeAllPopups}
                 form={'popup'}
                 title={'Редактировать профиль'}
@@ -127,7 +127,7 @@ export function App() {
 
 
             <PopupWithForm
-                isOpen={deletePlacePopupOpen}
+                isOpen={isDeletePlacePopupOpen}
                 onClose={closeAllPopups}
                 form={'delete-card-from-srv'}
                 title={'Вы уверены?'}
@@ -135,7 +135,7 @@ export function App() {
             />
 
             <PopupWithForm
-                isOpen={addPlacePopupOpen}
+                isOpen={isAddPlacePopupOpen}
                 onClose={closeAllPopups}
                 form={'add-image'}
                 title={'Новое место'}
