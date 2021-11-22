@@ -5,7 +5,7 @@ import Header from './Header.js'
 import Footer from  './Footer.js'
 import Main from "./Main.js";
 import PopupWithForm from './PopupWithForm.js';
-import PopupWithImage from './PopupWithImage.js';
+import ImagePopup from './ImagePopup.js';
 
 
 
@@ -171,7 +171,7 @@ export function App() {
             />
 
 
-            <PopupWithImage
+            <ImagePopup
                 card={selectedCard}
                 onClose={closeAllPopups}
             />
