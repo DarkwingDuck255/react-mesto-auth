@@ -46,3 +46,5 @@
 @import url(./blocks/element/__like-wrapper/element__like-wrapper.css);
 @import url(./blocks/element/__like-counter/element__like-counter.css);
 @import url(./blocks/profile/__avatar-edit-button/profile__avatar-edit-button.css);
+@import url(./blocks/element/__delete/_hidden/element__delete_hidden.css);
+@import url(./blocks/element/__delete/_visible/element__delete_visible.css);

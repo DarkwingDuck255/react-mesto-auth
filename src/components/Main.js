@@ -1,37 +1,25 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 // import image from '../images/image.jpg'
-import {api} from '../utils/Api.js'
+// import {api} from '../utils/Api.js'
 import Card from './Card.js';
-
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 export default function Main(props) {
 
-
-    const [userInfo, setUserinfo] = React.useState({})
-    const [cards, setCards] = React.useState([])
-    useEffect(() =>{
-        Promise.all([api.getUserFromSrv(), api.getInitialCards()])
-            .then(([profile, card]) =>{
-                setUserinfo(profile)
-                setCards(card)
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
-    }, [])
+    const currentUser = React.useContext(CurrentUserContext)
     
     return (<main>
         <section className="profile">
             <div className="profile__wrap">
                 <button type="button" className="profile__avatar-edit-button" onClick={props.onEditAvatar}>
-                    <img src={userInfo.avatar} className="profile__avatar avatar" alt={userInfo.name} />
+                    <img src={currentUser.avatar} className="profile__avatar avatar" alt={currentUser.name} />
                 </button>
                 <div className="profile__info">
                     <div className="profile__name-wrap">
-                        <h1 className="profile__name">{userInfo.name}</h1>
+                        <h1 className="profile__name">{currentUser.name}</h1>
                         <button className="profile__edit" type="button" onClick={props.onEditProfile}></button>
                     </div>
-                    <p className="profile__description">{userInfo.about}</p>
+                    <p className="profile__description">{currentUser.about}</p>
 
                 </div>
             </div>
@@ -39,26 +27,20 @@ export default function Main(props) {
         </section>
         {/* <!--КАРТОЧКИ--> */}
         <section className="elements">
-            {cards.map((card, _id) => (
+            {props.cards.map((card, _id) => (
                 <Card
                     card={card}
                     key={_id}
                     link={card.link}
                     name={card.name}
                     likes={card.likes.length}
+                    onCardLike={props.onCardLike}
+                    onCardDelete={props.onCardDelete}
                     onCardClick={props.onCardClick}
                 />
             ))}
             
         </section>
-        
-        
-        {/* <!--ПОПАПЫ ФОРМ--> */}
-
-        {/* <!-- Попап изменения аватара --> */}
-        
-        {/* <!-- Попап удаления карточки --> */}
-
     </main>
     )
 }

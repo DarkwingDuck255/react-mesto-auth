@@ -5,7 +5,7 @@ export default function ImagePopup(props) {
     return (
         // {/* <!--Попап картинки--> */}
 
-        <div className={`popup image-popup ${props.card ? 'popup_open' :''}`}>
+        <div className={`popup image-popup ${props.card ? 'popup_open' :''}`} onClick={props.onClickOnOverlay}>
             <div className="image-popup__wrap">
                 <button className="image-popup__close-button popup__close-button" type="button"
                         id="#image-popup__close-button" onClick={props.onClose}></button>
