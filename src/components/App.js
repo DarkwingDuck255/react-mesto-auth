@@ -18,10 +18,10 @@ import AddPlacePopup from './AddPlacePopup'
 
 
 export function App() {
-    const [isAvatarEditPopupOpen, setEditAvatarPopupOpen] = React.useState(false)
-    const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false)
-    const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false)
-    const [isDeletePlacePopupOpen, setDeletePlacePopupOpen] = React.useState(false)
+    const [isAvatarEditPopupOpen, setIsAvatarEditPopupOpen] = React.useState(false)
+    const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false)
+    const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false)
+    const [isDeletePlacePopupOpen, setIsDeletePlacePopupOpen] = React.useState(false)
     const [selectedCard, setSelectedCard] = React.useState(null)
     const [currentUser, setCurrentUser] = React.useState({})
     const [cards, setCards] = React.useState([])
@@ -40,7 +40,7 @@ export function App() {
 
 
     function handleEditAvatarPopupOpen() {
-        setEditAvatarPopupOpen(true)
+        setIsAvatarEditPopupOpen(true)
     }
 
     function handleCardClick(card) {
@@ -48,22 +48,22 @@ export function App() {
     }
 
     function handleDeletePlace() {
-        setDeletePlacePopupOpen(true)
+        setIsDeletePlacePopupOpen(true)
     }
 
-    function handleisEditProfilePopupOpen() {
-        setEditProfilePopupOpen(true)
+    function handleEditProfilePopupOpen() {
+        setIsEditProfilePopupOpen(true)
     }
 
-    function handleisAddPlacePopupOpen() {
-        setAddPlacePopupOpen(true)
+    function handleAddPlacePopupOpen() {
+        setIsAddPlacePopupOpen(true)
     }
 
     function closeAllPopups() {
-        setEditAvatarPopupOpen(false)
-        setEditProfilePopupOpen(false)
-        setAddPlacePopupOpen(false)
-        setDeletePlacePopupOpen(false)
+        setIsAvatarEditPopupOpen(false)
+        setIsEditProfilePopupOpen(false)
+        setIsAddPlacePopupOpen(false)
+        setIsDeletePlacePopupOpen(false)
         setSelectedCard(null)
     }
 
@@ -148,8 +148,8 @@ export function App() {
             <Header/>
             <Main
                 onEditAvatar={handleEditAvatarPopupOpen}
-                onEditProfile={handleisEditProfilePopupOpen}
-                onAddPlace={handleisAddPlacePopupOpen}
+                onEditProfile={handleEditProfilePopupOpen}
+                onAddPlace={handleAddPlacePopupOpen}
                 deletePlace={handleDeletePlace}
                 onCardClick={handleCardClick}
                 onCardLike={handleCardLike}

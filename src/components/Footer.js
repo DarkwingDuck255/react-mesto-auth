@@ -4,7 +4,7 @@ export default function Footer() {
     return(
         <footer>
             <p className="copyright">
-                © {2021} Mesto Russia
+                © {new Date().getFullYear()} Mesto Russia
             </p>
         </footer>
     )
