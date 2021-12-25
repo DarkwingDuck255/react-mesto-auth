@@ -1,6 +1,4 @@
 import React from 'react';
-// import image from '../images/image.jpg'
-// import {api} from '../utils/Api.js'
 import Card from './Card.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 

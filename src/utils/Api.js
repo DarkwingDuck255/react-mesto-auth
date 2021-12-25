@@ -13,9 +13,7 @@ export default class Api {
     }
 
 
-    // getAppInfo() {
-    //     return Promise.all([this.getUserFromSrv(), this.getInitialCards()])
-    //   }
+
 
     getUserFromSrv() {
         return fetch(`${this._url}/users/me`, {

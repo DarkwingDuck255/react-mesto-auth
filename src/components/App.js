@@ -1,19 +1,24 @@
 // import logo from '../images/logo.svg';
 import '../index.css';
 import React from 'react';
-import Header from './Header.js'
+import Header from './Header'
 import Footer from  './Footer.js'
 import Main from "./Main.js";
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 import {api} from '../utils/Api.js'
-import {CurrentUserContext} from "../contexts/CurrentUserContext";
-// import Card from './Card';
-import { useEffect } from 'react';
+import {CurrentUserContext} from '../contexts/CurrentUserContext.js'
+// import { useEffect } from 'react';
 import EditProfilePopup from './EditProfilePopup';
-import EditAvatarPopup from './EditAvatarPopup'
-import AddPlacePopup from './AddPlacePopup'
-
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
+import ProtectedRoute from './ProtectedRoute'
+import { Route, Switch, useHistory, Redirect } from "react-router-dom";
+import Register from './Register';
+import Login from './Login';
+import * as auth from '../utils/auth.js'
+import { withRouter } from 'react-router-dom/cjs/react-router-dom.min';
+import InfoTooltip from './InfoTooltip';
 
 
 
@@ -22,12 +27,20 @@ export function App() {
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false)
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false)
     const [isDeletePlacePopupOpen, setIsDeletePlacePopupOpen] = React.useState(false)
+    const [isTooltipOpen, setIsTooltipOpen] = React.useState(false)
     const [selectedCard, setSelectedCard] = React.useState(null)
     const [currentUser, setCurrentUser] = React.useState({})
     const [cards, setCards] = React.useState([])
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false)
+    // const [isRegErr, setIsRegErr] = React.useState(false)
+    const [isErrMsg, setIsErrMsg] = React.useState(false)
+    const [email, setEmail] = React.useState('')
+    const history = useHistory();
 
 
-    useEffect(() =>{
+
+    React.useEffect(() => {
+        checkToken()
         Promise.all([api.getUserFromSrv(), api.getInitialCards()])
             .then(([profile, card]) =>{
                 setCurrentUser(profile)
@@ -38,6 +51,61 @@ export function App() {
             })
     }, [])
 
+    function checkToken() {
+        const token = localStorage.getItem('token');
+        if (token) {
+          auth.checkToken(token)
+          .then((data) => {
+            setIsLoggedIn(true);
+            history.push('/')
+            setEmail(data.email)
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+        }
+      }
+
+
+    function onLogin(email, password) {
+        auth.login(
+            {email: email,
+            password: password})
+        .then((data)=>{
+            if(data.token){
+                handleSignin()
+                history.push('/')
+                setEmail(email)
+            }
+            
+
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+        .then(console.log(isLoggedIn))
+    }
+
+    function onRegister(email, password) {
+        auth.register(email, password)
+        .then(()=>{
+            handleTooltipPopupOpen()
+            // setIsRegErr(false)
+            setIsErrMsg(false)
+        })
+        .catch((err)=>{
+            
+            setIsTooltipOpen(true)
+            // setIsRegErr(true)
+            setIsErrMsg(true)
+            console.log(err)
+        })
+    }
+
+
+    function handleSignin() {
+        setIsLoggedIn(true)
+    }
 
     function handleEditAvatarPopupOpen() {
         setIsAvatarEditPopupOpen(true)
@@ -59,12 +127,17 @@ export function App() {
         setIsAddPlacePopupOpen(true)
     }
 
+    function handleTooltipPopupOpen() {
+        setIsTooltipOpen(true)
+    }
+
     function closeAllPopups() {
         setIsAvatarEditPopupOpen(false)
         setIsEditProfilePopupOpen(false)
         setIsAddPlacePopupOpen(false)
         setIsDeletePlacePopupOpen(false)
         setSelectedCard(null)
+        setIsTooltipOpen(false)
     }
 
     function closeByClickOnOverlay(evt) {
@@ -142,67 +215,101 @@ export function App() {
     }
 
     return (
-        
+        <>
+            <CurrentUserContext.Provider value={currentUser}>
+                <Header 
+                    isLoggedIn={isLoggedIn}
+                    email={email}
+                    setIsLoggedIn={setIsLoggedIn}
+                />
 
-        <CurrentUserContext.Provider value={currentUser}>
-            <Header/>
-            <Main
-                onEditAvatar={handleEditAvatarPopupOpen}
-                onEditProfile={handleEditProfilePopupOpen}
-                onAddPlace={handleAddPlacePopupOpen}
-                deletePlace={handleDeletePlace}
-                onCardClick={handleCardClick}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
-                cards={cards}
-            />
-            {/* попап автарки пользователя */}
-            <EditAvatarPopup 
-                isOpen={isAvatarEditPopupOpen} 
-                onClose={closeAllPopups}
-                onSubmit={handleUpdateAvatar} 
-                onClickOnOverlay={closeByClickOnOverlay}
-            /> 
+                <Switch>
+                
+                    <ProtectedRoute
+                        exact path='/'
+                        isLoggedIn={isLoggedIn}
+                        component = {Main}
+                        onEditAvatar={handleEditAvatarPopupOpen}
+                        onEditProfile={handleEditProfilePopupOpen}
+                        onAddPlace={handleAddPlacePopupOpen}
+                        deletePlace={handleDeletePlace}
+                        onCardClick={handleCardClick}
+                        onCardLike={handleCardLike}
+                        onCardDelete={handleCardDelete}
+                        cards={cards}
+                    >
+                    <Footer/>
+                    </ProtectedRoute>
+                    <Route path='/sign-in'>
+                        <Login onLogin={onLogin}/>
+                    </Route>
+                    
+                    <Route path='/sign-up' >
+                        <Register onRegister={onRegister} />
+                    </Route>
 
-            
-            <Footer/>
+                    <Route exact path="*">
+                        {isLoggedIn ? (
+                        <Redirect to="/" />
+                        ) : (
+                        <Redirect to="/sign-in" />
+                        )}
+                    </Route>
+                </Switch>
 
-            <EditProfilePopup 
-                isOpen={isEditProfilePopupOpen} 
-                onClose={closeAllPopups} 
-                onSubmit={handleUpdateUser}
-                onClickOnOverlay={closeByClickOnOverlay}
-            />
+                {/* попап автарки пользователя */}
+                <EditAvatarPopup 
+                    isOpen={isAvatarEditPopupOpen} 
+                    onClose={closeAllPopups}
+                    onSubmit={handleUpdateAvatar} 
+                    onClickOnOverlay={closeByClickOnOverlay}
+                />
 
-
-            <PopupWithForm
-                isOpen={isDeletePlacePopupOpen}
-                onClose={closeAllPopups}
-                onClickOnOverlay={closeByClickOnOverlay}
-                form={'delete-card-from-srv'}
-                title={'Вы уверены?'}
-                buttonText={'Да'}
-            />
-
-
-            <AddPlacePopup
-                isOpen={isAddPlacePopupOpen}
-                onClose={closeAllPopups}
-                onSubmit={handleAddPlaceSubmit}
-                onClickOnOverlay={closeByClickOnOverlay}
-            />
-                                
-            
+                <EditProfilePopup 
+                    isOpen={isEditProfilePopupOpen} 
+                    onClose={closeAllPopups} 
+                    onSubmit={handleUpdateUser}
+                    onClickOnOverlay={closeByClickOnOverlay}
+                />
 
 
-            <ImagePopup
-                card={selectedCard}
-                onClose={closeAllPopups}
-                onClickOnOverlay={closeByClickOnOverlay}
-            />
+                <PopupWithForm
+                    isOpen={isDeletePlacePopupOpen}
+                    onClose={closeAllPopups}
+                    onClickOnOverlay={closeByClickOnOverlay}
+                    form={'delete-card-from-srv'}
+                    title={'Вы уверены?'}
+                    buttonText={'Да'}
+                />
+
+
+                <AddPlacePopup
+                    isOpen={isAddPlacePopupOpen}
+                    onClose={closeAllPopups}
+                    onSubmit={handleAddPlaceSubmit}
+                    onClickOnOverlay={closeByClickOnOverlay}
+                />
+
+
+                <ImagePopup
+                    card={selectedCard}
+                    onClose={closeAllPopups}
+                    onClickOnOverlay={closeByClickOnOverlay}
+                />
+
+                <InfoTooltip
+                    isOpen={isTooltipOpen}
+                    onClose={closeAllPopups}
+                    onClickOnOverlay={closeByClickOnOverlay}
+                    isErrMsg={isErrMsg}
+                />
+
+
+                
+
             </CurrentUserContext.Provider>
-
-    );
+        </>
+    )
 }
 
-export default App;
+export default withRouter(App);
