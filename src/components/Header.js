@@ -3,10 +3,10 @@ import { withRouter, useLocation, Link } from 'react-router-dom';
 import logo from "../images/logo.svg";
 
 function Header(props) {
-    const { somePath } = useLocation()
+    const { pathname  } = useLocation()
 
-    const linkPath = `${ somePath === '/sign-up' ? '/sign-in' : '/sign-up'}`
-    const linkName = `${ somePath === '/sign-in' ? 'Войти' : 'Регистрация'}` 
+    const linkPath = `${pathname  === "/sign-up" ? "/sign-in" : "/sign-up"}`
+    const linkName = `${ pathname  === '/sign-up' ? 'Войти' : 'Регистрация'}` 
 
     function signOut() {
         props.setIsLoggedIn(false)
@@ -17,15 +17,16 @@ function Header(props) {
     return(
         <header className="header">
             <img src={logo} className="header__logo" alt="Логотип"/>
-            <nav className='header__nav'>
                 {props.isLoggedIn ?
-                    <>
+                    
+                    <nav className='header__nav'>
                         <p className='header__nav header__mail'>{props.email}</p>
-                        <Link to='/sign-in' className='header__nav header__toggling-link' type='button' onClick={signOut}>Выйти</Link>
-                    </>
+                        <Link to='' className='header__nav header__toggling-link' type='button' onClick={signOut}>Выйти</Link>
+                    </nav>
+                   
                      : (<Link to={linkPath} className='header__nav header__toggling-link' type='button'>{linkName}</Link>)
-            }
-            </nav>
+                }
+
         </header>
     )
     
