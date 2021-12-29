@@ -41,6 +41,7 @@ export function App() {
 
     React.useEffect(() => {
         checkToken()
+        if(isLoggedIn) {
             Promise.all([api.getUserFromSrv(), api.getInitialCards()])
                 .then(([profile, card]) =>{
                     setCurrentUser(profile)
@@ -48,8 +49,8 @@ export function App() {
                 })
                 .catch((err)=>{
                     console.log(err)
-                })
-    }, [])
+                })}
+    }, [isLoggedIn])
 
     function checkToken() {
         const token = localStorage.getItem('token');
