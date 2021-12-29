@@ -41,14 +41,14 @@ export function App() {
 
     React.useEffect(() => {
         checkToken()
-        Promise.all([api.getUserFromSrv(), api.getInitialCards()])
-            .then(([profile, card]) =>{
-                setCurrentUser(profile)
-                setCards(card)
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
+            Promise.all([api.getUserFromSrv(), api.getInitialCards()])
+                .then(([profile, card]) =>{
+                    setCurrentUser(profile)
+                    setCards(card)
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
     }, [])
 
     function checkToken() {
@@ -73,17 +73,16 @@ export function App() {
             password: password})
         .then((data)=>{
             if(data.token){
-                handleSignin()
+                setIsLoggedIn(true)
                 history.push('/')
                 setEmail(email)
             }
-            
-
         })
+        // .then(console.log(isLoggedIn))
         .catch((err)=>{
             console.log(err)
         })
-        .then(console.log(isLoggedIn))
+        
     }
 
     function onRegister(email, password) {
@@ -239,7 +238,7 @@ export function App() {
                         onCardDelete={handleCardDelete}
                         cards={cards}
                     >
-                    <Footer/>
+                    
                     </ProtectedRoute>
                     <Route path='/sign-in'>
                         <Login onLogin={onLogin}/>
@@ -256,8 +255,9 @@ export function App() {
                         <Redirect to="/sign-in" />
                         )}
                     </Route>
+                    
                 </Switch>
-
+                
                 {/* попап автарки пользователя */}
                 <EditAvatarPopup 
                     isOpen={isAvatarEditPopupOpen} 
@@ -309,6 +309,7 @@ export function App() {
                 
 
             </CurrentUserContext.Provider>
+            <Footer/>
         </>
     )
 }

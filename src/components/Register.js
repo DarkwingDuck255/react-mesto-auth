@@ -33,6 +33,7 @@ export default function Register(props) {
                     placeholder='Email'
                     required
                     onChange={handleEmailInput}
+                    value={email}
                 />
                 <input className='register__input'
                     type='password'
@@ -40,6 +41,7 @@ export default function Register(props) {
                     placeholder='Пароль'
                     required
                     onChange={handlePasswordInput}
+                    value={password}
                 />
                 <button className='register__submit' type='submit'>Зарегистрироваться</button>
             </form>

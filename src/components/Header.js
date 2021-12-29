@@ -11,7 +11,7 @@ function Header(props) {
     function signOut() {
         props.setIsLoggedIn(false)
         localStorage.removeItem('token')
-        props.history.push('/sign-up')
+        props.history.push('/sign-in')
     }
     
     return(
