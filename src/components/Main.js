@@ -25,10 +25,10 @@ export default function Main(props) {
         </section>
         {/* <!--КАРТОЧКИ--> */}
         <section className="elements">
-            {props.cards.map((card, id) => (
+            {props.cards.map((card) => (
                 <Card
                     card={card}
-                    key={id}
+                    key={card._id}
                     link={card.link}
                     name={card.name}
                     likes={card.likes.length}
